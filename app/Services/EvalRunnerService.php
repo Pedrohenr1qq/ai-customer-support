@@ -5,21 +5,31 @@ namespace App\Services;
 use App\Ai\Agents\TicketTriageAgent;
 use App\Enums\TicketCategory;
 use App\Enums\TicketPriority;
+use App\Models\AiAgent;
 use App\Models\EvalCase;
 use App\Models\EvalRun;
+use Laravel\Ai\Exceptions\FailoverableException;
+use Laravel\Ai\Responses\StructuredAgentResponse;
 use Throwable;
 
 class EvalRunnerService
 {
-    public function run(): EvalRun
+    /**
+     * @param  array<int, int>|null  $caseIds
+     */
+    public function run(?array $caseIds = null): EvalRun
     {
-        $cases = EvalCase::orderBy('id')->get();
+        $cases = EvalCase::query()
+            ->when($caseIds !== null && $caseIds !== [], fn ($q) => $q->whereIn('id', $caseIds))
+            ->orderBy('id')
+            ->get();
+
         $total = $cases->count();
 
         if ($total === 0) {
             return EvalRun::create([
                 'provider' => config('ai.default', 'gemini'),
-                'model_name' => 'gemini-2.0-flash',
+                'model_name' => config('ai.providers.gemini.models.text.default', 'gemini-flash-lite-latest'),
                 'total_cases' => 0,
                 'category_accuracy' => 0,
                 'priority_accuracy' => 0,
@@ -34,8 +44,9 @@ class EvalRunnerService
         $validSchemas = 0;
         $totalLatency = 0;
         $results = [];
-        $provider = config('ai.default', 'gemini');
-        $modelName = 'gemini-2.0-flash';
+        $agentConfig = AiAgent::active();
+        $provider = $agentConfig?->provider ?? config('ai.default', 'gemini');
+        $modelName = $agentConfig?->model_name ?? config('ai.providers.gemini.models.text.default', 'gemini-flash-lite-latest');
 
         $validCategories = array_column(TicketCategory::cases(), 'value');
         $validPriorities = array_column(TicketPriority::cases(), 'value');
@@ -44,7 +55,7 @@ class EvalRunnerService
             $startedAt = hrtime(true);
 
             try {
-                $response = TicketTriageAgent::make()->prompt($case->message);
+                $response = $this->promptWithRetry($case->message, $agentConfig);
                 $latencyMs = (int) round((hrtime(true) - $startedAt) / 1_000_000);
                 $totalLatency += $latencyMs;
 
@@ -76,12 +87,15 @@ class EvalRunnerService
                 $results[] = [
                     'eval_case_id' => $case->id,
                     'title' => $case->title,
+                    'message' => $case->message,
                     'expected_category' => $case->expected_category,
                     'predicted_category' => $predictedCategory,
                     'category_match' => $categoryMatch,
                     'expected_priority' => $case->expected_priority,
                     'predicted_priority' => $predictedPriority,
                     'priority_match' => $priorityMatch,
+                    'predicted_subject' => $structured['subject'] ?? null,
+                    'suggested_reply' => $structured['suggested_reply'] ?? null,
                     'schema_valid' => $isSchemaValid,
                     'confidence' => $structured['confidence'] ?? null,
                     'latency_ms' => $latencyMs,
@@ -94,12 +108,15 @@ class EvalRunnerService
                 $results[] = [
                     'eval_case_id' => $case->id,
                     'title' => $case->title,
+                    'message' => $case->message,
                     'expected_category' => $case->expected_category,
                     'predicted_category' => null,
                     'category_match' => false,
                     'expected_priority' => $case->expected_priority,
                     'predicted_priority' => null,
                     'priority_match' => false,
+                    'predicted_subject' => null,
+                    'suggested_reply' => null,
                     'schema_valid' => false,
                     'confidence' => null,
                     'latency_ms' => $latencyMs,
@@ -118,5 +135,28 @@ class EvalRunnerService
             'avg_latency_ms' => (int) round($totalLatency / $total),
             'results_json' => $results,
         ]);
+    }
+
+    private function promptWithRetry(string $message, ?AiAgent $agentConfig, int $maxAttempts = 3): StructuredAgentResponse
+    {
+        $agent = new TicketTriageAgent($agentConfig);
+
+        for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
+            try {
+                return $agent->prompt(
+                    $message,
+                    provider: $agentConfig?->provider,
+                    model: $agentConfig?->model_name,
+                );
+            } catch (FailoverableException $e) {
+                if ($attempt === $maxAttempts) {
+                    throw $e;
+                }
+
+                sleep($attempt * 2);
+            }
+        }
+
+        throw new \RuntimeException('Unreachable retry state.');
     }
 }

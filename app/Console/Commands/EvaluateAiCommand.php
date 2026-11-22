@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 
 class EvaluateAiCommand extends Command
 {
-    protected $signature = 'ai:evaluate';
+    protected $signature = 'ai:evaluate {--cases=* : Specific eval_case IDs to evaluate}';
 
     protected $description = 'Run the AI classification evaluation suite against labeled eval_cases.';
 
@@ -15,7 +15,12 @@ class EvaluateAiCommand extends Command
     {
         $this->info('Running AI classification evaluation suite...');
 
-        $run = $runner->run();
+        $caseIds = array_values(array_filter(
+            array_map('intval', (array) $this->option('cases')),
+            fn (int $id) => $id > 0,
+        ));
+
+        $run = $runner->run($caseIds === [] ? null : $caseIds);
 
         $this->table(
             ['Metric', 'Value'],
