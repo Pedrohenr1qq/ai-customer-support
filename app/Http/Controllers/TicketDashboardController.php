@@ -34,7 +34,10 @@ class TicketDashboardController extends Controller
             'queued' => Ticket::whereIn('current_status', [TicketStatus::Queued->value, TicketStatus::Processing->value])->count(),
             'awaiting_review' => Ticket::where('current_status', TicketStatus::AwaitingReview->value)->count(),
             'fallback_manual' => Ticket::where('current_status', TicketStatus::FallbackManual->value)->count(),
-            'resolved' => Ticket::where('current_status', TicketStatus::Resolved->value)->count(),
+            'resolved' => Ticket::whereIn('current_status', [
+                TicketStatus::Resolved->value,
+                TicketStatus::ResponseSent->value,
+            ])->count(),
             'ai_acceptance_rate' => $totalReviews > 0 ? round(($uneditedReviews / $totalReviews) * 100, 1) : null,
         ];
 

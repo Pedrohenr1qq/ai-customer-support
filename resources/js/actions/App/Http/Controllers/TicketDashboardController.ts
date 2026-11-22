@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\TicketDashboardController::show
-* @see app/Http/Controllers/TicketDashboardController.php:56
+* @see app/Http/Controllers/TicketDashboardController.php:59
 * @route '/tickets/{ticket}'
 */
 export const show = (args: { ticket: string | number | { id: string | number } } | [ticket: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -97,7 +97,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\TicketDashboardController::show
-* @see app/Http/Controllers/TicketDashboardController.php:56
+* @see app/Http/Controllers/TicketDashboardController.php:59
 * @route '/tickets/{ticket}'
 */
 show.url = (args: { ticket: string | number | { id: string | number } } | [ticket: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
@@ -130,7 +130,7 @@ show.url = (args: { ticket: string | number | { id: string | number } } | [ticke
 
 /**
 * @see \App\Http\Controllers\TicketDashboardController::show
-* @see app/Http/Controllers/TicketDashboardController.php:56
+* @see app/Http/Controllers/TicketDashboardController.php:59
 * @route '/tickets/{ticket}'
 */
 show.get = (args: { ticket: string | number | { id: string | number } } | [ticket: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -140,7 +140,7 @@ show.get = (args: { ticket: string | number | { id: string | number } } | [ticke
 
 /**
 * @see \App\Http\Controllers\TicketDashboardController::show
-* @see app/Http/Controllers/TicketDashboardController.php:56
+* @see app/Http/Controllers/TicketDashboardController.php:59
 * @route '/tickets/{ticket}'
 */
 show.head = (args: { ticket: string | number | { id: string | number } } | [ticket: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -150,7 +150,7 @@ show.head = (args: { ticket: string | number | { id: string | number } } | [tick
 
 /**
 * @see \App\Http\Controllers\TicketDashboardController::show
-* @see app/Http/Controllers/TicketDashboardController.php:56
+* @see app/Http/Controllers/TicketDashboardController.php:59
 * @route '/tickets/{ticket}'
 */
 const showForm = (args: { ticket: string | number | { id: string | number } } | [ticket: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -160,7 +160,7 @@ const showForm = (args: { ticket: string | number | { id: string | number } } | 
 
 /**
 * @see \App\Http\Controllers\TicketDashboardController::show
-* @see app/Http/Controllers/TicketDashboardController.php:56
+* @see app/Http/Controllers/TicketDashboardController.php:59
 * @route '/tickets/{ticket}'
 */
 showForm.get = (args: { ticket: string | number | { id: string | number } } | [ticket: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -170,7 +170,7 @@ showForm.get = (args: { ticket: string | number | { id: string | number } } | [t
 
 /**
 * @see \App\Http\Controllers\TicketDashboardController::show
-* @see app/Http/Controllers/TicketDashboardController.php:56
+* @see app/Http/Controllers/TicketDashboardController.php:59
 * @route '/tickets/{ticket}'
 */
 showForm.head = (args: { ticket: string | number | { id: string | number } } | [ticket: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

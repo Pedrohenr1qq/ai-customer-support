@@ -9,6 +9,7 @@ enum TicketStatus: string
     case AwaitingReview = 'awaiting_review';
     case FallbackManual = 'fallback_manual';
     case Resolved = 'resolved';
+    case ResponseSent = 'response_sent';
 
     public function label(): string
     {
@@ -18,6 +19,7 @@ enum TicketStatus: string
             self::AwaitingReview => 'Awaiting Review',
             self::FallbackManual => 'Manual Fallback',
             self::Resolved => 'Resolved',
+            self::ResponseSent => 'Response Sent',
         };
     }
 }

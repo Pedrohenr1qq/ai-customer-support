@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\TicketReviewController::store
-* @see app/Http/Controllers/TicketReviewController.php:13
+* @see app/Http/Controllers/TicketReviewController.php:14
 * @route '/tickets/{ticket}/review'
 */
 export const store = (args: { ticket: string | number | { id: string | number } } | [ticket: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\TicketReviewController::store
-* @see app/Http/Controllers/TicketReviewController.php:13
+* @see app/Http/Controllers/TicketReviewController.php:14
 * @route '/tickets/{ticket}/review'
 */
 store.url = (args: { ticket: string | number | { id: string | number } } | [ticket: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ store.url = (args: { ticket: string | number | { id: string | number } } | [tick
 
 /**
 * @see \App\Http\Controllers\TicketReviewController::store
-* @see app/Http/Controllers/TicketReviewController.php:13
+* @see app/Http/Controllers/TicketReviewController.php:14
 * @route '/tickets/{ticket}/review'
 */
 store.post = (args: { ticket: string | number | { id: string | number } } | [ticket: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -59,7 +59,7 @@ store.post = (args: { ticket: string | number | { id: string | number } } | [tic
 
 /**
 * @see \App\Http\Controllers\TicketReviewController::store
-* @see app/Http/Controllers/TicketReviewController.php:13
+* @see app/Http/Controllers/TicketReviewController.php:14
 * @route '/tickets/{ticket}/review'
 */
 const storeForm = (args: { ticket: string | number | { id: string | number } } | [ticket: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -69,7 +69,7 @@ const storeForm = (args: { ticket: string | number | { id: string | number } } |
 
 /**
 * @see \App\Http\Controllers\TicketReviewController::store
-* @see app/Http/Controllers/TicketReviewController.php:13
+* @see app/Http/Controllers/TicketReviewController.php:14
 * @route '/tickets/{ticket}/review'
 */
 storeForm.post = (args: { ticket: string | number | { id: string | number } } | [ticket: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

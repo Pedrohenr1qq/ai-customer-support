@@ -69,6 +69,7 @@ const statusBadgeVariant: Record<string, 'default' | 'secondary' | 'destructive'
     awaiting_review: 'default',
     fallback_manual: 'destructive',
     resolved: 'outline',
+    response_sent: 'outline',
 };
 
 const priorityColor: Record<string, string> = {
