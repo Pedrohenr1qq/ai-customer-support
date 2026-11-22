@@ -4,6 +4,7 @@ namespace App\Ai\Agents;
 
 use App\Enums\TicketCategory;
 use App\Enums\TicketPriority;
+use App\Models\AiAgent;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Ai\Attributes\Timeout;
 use Laravel\Ai\Contracts\Agent;
@@ -16,10 +17,11 @@ class TicketTriageAgent implements Agent, HasStructuredOutput
 {
     use Promptable;
 
-    /**
-     * Get the instructions that the agent should follow.
-     */
-    public function instructions(): Stringable|string
+    public function __construct(
+        public readonly ?AiAgent $aiAgent = null,
+    ) {}
+
+    public static function defaultInstructions(): string
     {
         return <<<'INSTRUCTIONS'
 You are a senior customer support triage specialist.
@@ -41,6 +43,20 @@ Priority guidelines:
 
 Also provide a concise subject line, a confidence score between 0.0 and 1.0, and a helpful, empathetic draft reply (suggested_reply) for a human support agent to review before sending.
 INSTRUCTIONS;
+    }
+
+    /**
+     * Get the instructions that the agent should follow.
+     */
+    public function instructions(): Stringable|string
+    {
+        $customInstructions = $this->aiAgent?->activePrompt?->instructions;
+
+        if (is_string($customInstructions) && trim($customInstructions) !== '') {
+            return $customInstructions;
+        }
+
+        return self::defaultInstructions();
     }
 
     /**

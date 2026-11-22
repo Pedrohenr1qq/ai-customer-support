@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\ApiTokenController;
+use App\Http\Controllers\AiAgentController;
+use App\Http\Controllers\EvalCaseController;
 use App\Http\Controllers\EvalController;
 use App\Http\Controllers\TicketDashboardController;
 use App\Http\Controllers\TicketReviewController;
@@ -18,10 +19,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('evals', [EvalController::class, 'index'])->name('evals.index');
     Route::post('evals/run', [EvalController::class, 'store'])->name('evals.run');
+    Route::get('evals/{evalRun}', [EvalController::class, 'show'])->name('evals.show');
+    Route::post('eval-cases', [EvalCaseController::class, 'store'])->name('eval-cases.store');
 
-    Route::get('settings/api-tokens', [ApiTokenController::class, 'index'])->name('api-tokens.index');
-    Route::post('settings/api-tokens', [ApiTokenController::class, 'store'])->name('api-tokens.store');
-    Route::delete('settings/api-tokens/{tokenId}', [ApiTokenController::class, 'destroy'])->name('api-tokens.destroy');
+    Route::get('ai-agents', [AiAgentController::class, 'index'])->name('ai-agents.index');
+    Route::post('ai-agents', [AiAgentController::class, 'store'])->name('ai-agents.store');
+    Route::patch('ai-agents/{aiAgent}', [AiAgentController::class, 'update'])->name('ai-agents.update');
+    Route::post('ai-agents/{aiAgent}/prompts', [AiAgentController::class, 'storePrompt'])->name('ai-agents.prompts.store');
+    Route::post('ai-agents/{aiAgent}/prompts/{prompt}/activate', [AiAgentController::class, 'activatePrompt'])->name('ai-agents.prompts.activate');
 });
 
 require __DIR__.'/settings.php';

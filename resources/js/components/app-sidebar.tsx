@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, FlaskConical, Folder, KeyRound, LayoutGrid } from 'lucide-react';
+import { BookOpen, Bot, FlaskConical, Folder, LayoutGrid } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -14,14 +14,14 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
+        title: 'AI Agents',
+        url: '/ai-agents',
+        icon: Bot,
+    },
+    {
         title: 'AI Evals',
         url: '/evals',
         icon: FlaskConical,
-    },
-    {
-        title: 'API Tokens',
-        url: '/settings/api-tokens',
-        icon: KeyRound,
     },
 ];
 

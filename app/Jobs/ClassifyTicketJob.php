@@ -6,6 +6,7 @@ use App\Ai\Agents\TicketTriageAgent;
 use App\Enums\TicketCategory;
 use App\Enums\TicketPriority;
 use App\Enums\TicketStatus;
+use App\Models\AiAgent;
 use App\Models\Department;
 use App\Models\Ticket;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -54,8 +55,13 @@ class ClassifyTicketJob implements ShouldQueue
 
         $startedAt = hrtime(true);
 
-        $response = TicketTriageAgent::make()->prompt(
-            "Customer Name: {$ticket->customer_name}\nSubject: ".($ticket->subject_raw ?? 'N/A')."\nMessage:\n{$ticket->message}"
+        $agentConfig = AiAgent::active();
+        $agent = new TicketTriageAgent($agentConfig);
+
+        $response = $agent->prompt(
+            "Customer Name: {$ticket->customer_name}\nSubject: ".($ticket->subject_raw ?? 'N/A')."\nMessage:\n{$ticket->message}",
+            provider: $agentConfig?->provider,
+            model: $agentConfig?->model_name,
         );
 
         $latencyMs = (int) round((hrtime(true) - $startedAt) / 1_000_000);
