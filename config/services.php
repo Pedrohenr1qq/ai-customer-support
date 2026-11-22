@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'support_webhook' => [
+        'enabled' => env('SUPPORT_WEBHOOK_ENABLED', true),
+        'url' => env('SUPPORT_WEBHOOK_URL', 'https://webhook.site/support-callback'),
+        'secret' => env('SUPPORT_WEBHOOK_SECRET', 'dev-webhook-secret'),
+        'timeout' => (int) env('SUPPORT_WEBHOOK_TIMEOUT', 5),
+    ],
+
 ];
